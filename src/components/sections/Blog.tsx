@@ -272,7 +272,9 @@ export default function Blog() {
 
                 {/* CTA */}
                 <a
-                  href="#"
+                  href="https://t.me/martherapy"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 mt-2 group/link"
                   style={{
                     color: '#4A6FA5',
@@ -306,7 +308,9 @@ export default function Blog() {
           className="mt-10 flex justify-center"
         >
           <a
-            href="#"
+            href="https://t.me/martherapy"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-3 group"
             style={{
               color: '#5D6F83',
