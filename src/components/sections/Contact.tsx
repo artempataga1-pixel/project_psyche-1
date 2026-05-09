@@ -39,12 +39,17 @@ function formatDateRu(d: Date) {
   return d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
+type Variant = 'light-a' | 'light-b'
+
 /* ── Calendar ── */
 function BookingCalendar({
   onSelect,
+  variant,
 }: {
   onSelect: (date: Date, time: string) => void
+  variant?: Variant
 }) {
+  const isLight = variant === 'light-a' || variant === 'light-b'
   const today = new Date(); today.setHours(0, 0, 0, 0)
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth())
@@ -79,6 +84,11 @@ function BookingCalendar({
 
   const canPrev = !(year === today.getFullYear() && month === today.getMonth())
 
+  const navColor = isLight ? 'rgba(44,62,80,0.65)' : undefined
+  const monthYearColor = isLight ? 'rgba(44,62,80,0.90)' : 'rgba(248,249,250,0.85)'
+  const dayLabelColor = isLight ? 'rgba(44,62,80,0.35)' : 'rgba(248,249,250,0.25)'
+  const stepDividerBg = isLight ? 'rgba(44,62,80,0.08)' : 'rgba(255,255,255,0.07)'
+
   return (
     <div>
       {/* Month nav */}
@@ -89,7 +99,9 @@ function BookingCalendar({
           style={{
             width: 32, height: 32, borderRadius: '50%',
             background: canPrev ? 'rgba(216,180,160,0.12)' : 'transparent',
-            color: canPrev ? 'rgba(248,249,250,0.6)' : 'rgba(248,249,250,0.15)',
+            color: canPrev
+              ? (navColor ?? 'rgba(248,249,250,0.6)')
+              : (isLight ? 'rgba(44,62,80,0.20)' : 'rgba(248,249,250,0.15)'),
             border: 'none', cursor: canPrev ? 'pointer' : 'default',
             fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
@@ -97,7 +109,7 @@ function BookingCalendar({
         >‹</button>
         <span style={{
           fontFamily: 'var(--font-cormorant)', fontSize: '1.15rem', fontWeight: 600,
-          color: 'rgba(248,249,250,0.85)',
+          color: monthYearColor,
         }}>
           {MONTH_RU[month]} {year}
         </span>
@@ -106,7 +118,7 @@ function BookingCalendar({
           style={{
             width: 32, height: 32, borderRadius: '50%',
             background: 'rgba(216,180,160,0.12)',
-            color: 'rgba(248,249,250,0.6)',
+            color: navColor ?? 'rgba(248,249,250,0.6)',
             border: 'none', cursor: 'pointer',
             fontSize: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'background 0.2s',
@@ -119,7 +131,7 @@ function BookingCalendar({
         {DAY_RU.map(d => (
           <div key={d} style={{
             textAlign: 'center', fontSize: '0.7rem', fontFamily: 'var(--font-inter)',
-            color: 'rgba(248,249,250,0.25)', paddingBottom: 4,
+            color: dayLabelColor, paddingBottom: 4,
             fontWeight: 600, letterSpacing: '0.05em',
           }}>{d}</div>
         ))}
@@ -151,10 +163,10 @@ function BookingCalendar({
                   ? '#D8B4A0'
                   : 'transparent',
                 color: disabled
-                  ? 'rgba(248,249,250,0.12)'
+                  ? (isLight ? 'rgba(44,62,80,0.18)' : 'rgba(248,249,250,0.12)')
                   : isSelected
                     ? '#111D2A'
-                    : 'rgba(248,249,250,0.7)',
+                    : (isLight ? 'rgba(44,62,80,0.75)' : 'rgba(248,249,250,0.7)'),
                 fontSize: '0.82rem', fontFamily: 'var(--font-inter)',
                 fontWeight: isSelected ? 700 : 400,
                 cursor: disabled ? 'not-allowed' : 'pointer',
@@ -177,7 +189,7 @@ function BookingCalendar({
           >
             <div style={{
               height: 1,
-              background: 'rgba(255,255,255,0.07)',
+              background: stepDividerBg,
               marginBottom: 16,
             }} />
             <p style={{
@@ -196,9 +208,9 @@ function BookingCalendar({
                     onClick={() => pickTime(t)}
                     style={{
                       padding: '6px 14px', borderRadius: 999,
-                      border: `1px solid ${active ? '#D8B4A0' : 'rgba(255,255,255,0.12)'}`,
+                      border: `1px solid ${active ? '#D8B4A0' : (isLight ? 'rgba(44,62,80,0.15)' : 'rgba(255,255,255,0.12)')}`,
                       background: active ? 'rgba(216,180,160,0.18)' : 'transparent',
-                      color: active ? '#D8B4A0' : 'rgba(248,249,250,0.55)',
+                      color: active ? '#D8B4A0' : (isLight ? 'rgba(44,62,80,0.60)' : 'rgba(248,249,250,0.55)'),
                       fontFamily: 'var(--font-inter)', fontSize: '0.82rem',
                       cursor: 'pointer', transition: 'all 0.15s ease',
                     }}
@@ -214,11 +226,13 @@ function BookingCalendar({
 }
 
 /* ── Input style helper ── */
-const inputBase = (focused: boolean): React.CSSProperties => ({
-  background: focused ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)',
-  border: `1px solid ${focused ? 'rgba(216,180,160,0.35)' : 'rgba(255,255,255,0.08)'}`,
+const inputBase = (focused: boolean, isLight: boolean): React.CSSProperties => ({
+  background: isLight
+    ? (focused ? 'rgba(44,62,80,0.06)' : 'rgba(44,62,80,0.03)')
+    : (focused ? 'rgba(255,255,255,0.07)' : 'rgba(255,255,255,0.04)'),
+  border: `1px solid ${focused ? 'rgba(216,180,160,0.35)' : (isLight ? 'rgba(44,62,80,0.12)' : 'rgba(255,255,255,0.08)')}`,
   borderRadius: 14,
-  color: '#F8F9FA',
+  color: isLight ? '#2C3E50' : '#F8F9FA',
   padding: '14px 18px',
   fontSize: '0.93rem',
   width: '100%',
@@ -229,7 +243,7 @@ const inputBase = (focused: boolean): React.CSSProperties => ({
 })
 
 /* ── Main component ── */
-export default function Contact() {
+export default function Contact({ variant }: { variant?: Variant }) {
   type Step = 'calendar' | 'form' | 'success'
   const [step, setStep] = useState<Step>('calendar')
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
@@ -237,6 +251,40 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', phone: '', concern: '' })
   const [focused, setFocused] = useState<string | null>(null)
   const [calendlyReady, setCalendlyReady] = useState(false)
+
+  const isLight = variant === 'light-a' || variant === 'light-b'
+
+  const sectionBg = variant === 'light-a'
+    ? '#ECF1FA'
+    : variant === 'light-b'
+      ? '#FDF7F4'
+      : '#111D2A'
+
+  const labelColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.85)' : 'rgba(180,120,95,0.90)')
+    : 'rgba(216,180,160,0.7)'
+
+  const labelLineColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.40)' : 'rgba(216,180,160,0.65)')
+    : 'rgba(216,180,160,0.5)'
+
+  const titleColor = isLight ? '#2C3E50' : '#F8F9FA'
+  const bodyColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.48)'
+
+  const contactInfoTextColor = isLight ? 'rgba(44,62,80,0.75)' : 'rgba(248,249,250,0.65)'
+  const contactInfoLabelColor = isLight ? 'rgba(44,62,80,0.35)' : 'rgba(248,249,250,0.25)'
+
+  const rightPanelBg = isLight
+    ? (variant === 'light-a' ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.85)')
+    : 'rgba(255,255,255,0.03)'
+  const rightPanelBorder = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.12)' : 'rgba(216,180,160,0.18)')
+    : 'rgba(255,255,255,0.07)'
+
+  const stepIndicatorSubColor = isLight ? 'rgba(44,62,80,0.30)' : 'rgba(248,249,250,0.25)'
+  const stepDividerBg = isLight ? 'rgba(44,62,80,0.08)' : 'rgba(255,255,255,0.08)'
+  const stepSubtitleColor = isLight ? 'rgba(44,62,80,0.55)' : 'rgba(248,249,250,0.55)'
+  const calendarNoticeColor = isLight ? 'rgba(44,62,80,0.25)' : 'rgba(248,249,250,0.2)'
 
   /* listen for Calendly booking confirmed */
   const handleCalendlyEvent = useCallback((e: MessageEvent) => {
@@ -281,12 +329,14 @@ export default function Contact() {
   const canProceed = selectedDate !== null && selectedTime !== null
 
   return (
-    <section id="contact" className="py-20 md:py-32 relative overflow-hidden" style={{ background: '#111D2A' }}>
+    <section id="contact" className="py-20 md:py-32 relative overflow-hidden" style={{ background: sectionBg }}>
 
       {/* Glow */}
       <div className="absolute pointer-events-none" style={{
         bottom: '-20%', right: '-10%', width: '50vw', height: '50vw',
-        background: 'radial-gradient(circle, rgba(74,111,165,0.08) 0%, transparent 65%)',
+        background: isLight
+          ? `radial-gradient(circle, ${variant === 'light-a' ? 'rgba(74,111,165,0.06)' : 'rgba(216,180,160,0.10)'} 0%, transparent 65%)`
+          : 'radial-gradient(circle, rgba(74,111,165,0.08) 0%, transparent 65%)',
         filter: 'blur(80px)',
       }} />
 
@@ -302,9 +352,9 @@ export default function Contact() {
             viewport={viewportOnce}
           >
             <motion.div variants={staggerItem} className="flex items-center gap-4 mb-7">
-              <span style={{ display: 'block', width: '36px', height: '1px', background: 'rgba(216,180,160,0.5)' }} />
+              <span style={{ display: 'block', width: '36px', height: '1px', background: labelLineColor }} />
               <span className="text-xs font-semibold uppercase tracking-[0.15em]"
-                style={{ color: 'rgba(216,180,160,0.7)', fontFamily: 'var(--font-inter)' }}>
+                style={{ color: labelColor, fontFamily: 'var(--font-inter)' }}>
                 начать работу
               </span>
             </motion.div>
@@ -312,13 +362,13 @@ export default function Contact() {
             <motion.h2 variants={staggerItem} className="font-bold mb-6" style={{
               fontFamily: 'var(--font-cormorant)',
               fontSize: 'clamp(2.8rem, 5vw, 4rem)',
-              color: '#F8F9FA', lineHeight: 1.08,
+              color: titleColor, lineHeight: 1.08,
             }}>
               {contact.title}
             </motion.h2>
 
             <motion.p variants={staggerItem} className="mb-8 md:mb-12" style={{
-              color: 'rgba(248,249,250,0.48)', fontFamily: 'var(--font-open-sans)',
+              color: bodyColor, fontFamily: 'var(--font-open-sans)',
               lineHeight: 1.8, maxWidth: 400, fontSize: '1rem',
             }}>
               {contact.subtitle}
@@ -337,14 +387,39 @@ export default function Contact() {
                   }} />
                   <div>
                     <span className="block text-xs uppercase tracking-[0.12em] mb-1"
-                      style={{ color: 'rgba(248,249,250,0.25)', fontFamily: 'var(--font-inter)' }}>
+                      style={{ color: contactInfoLabelColor, fontFamily: 'var(--font-inter)' }}>
                       {item.label}
                     </span>
-                    <span style={{ color: 'rgba(248,249,250,0.65)', fontFamily: 'var(--font-open-sans)', fontSize: '0.97rem' }}>
+                    <span style={{ color: contactInfoTextColor, fontFamily: 'var(--font-open-sans)', fontSize: '0.97rem' }}>
                       {item.text}
                     </span>
                   </div>
                 </div>
+              ))}
+            </motion.div>
+
+            <motion.div variants={staggerItem} className="flex flex-wrap gap-3 mb-8 md:mb-12">
+              {contact.socials.map(s => (
+                <a
+                  key={s.href}
+                  href={s.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 transition-all duration-200 hover:opacity-100 hover:-translate-y-0.5"
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: 9999,
+                    border: `1px solid ${isLight ? 'rgba(216,180,160,0.30)' : 'rgba(216,180,160,0.18)'}`,
+                    background: isLight ? 'rgba(216,180,160,0.08)' : 'rgba(216,180,160,0.06)',
+                    fontFamily: 'var(--font-inter)',
+                    fontSize: '0.82rem',
+                    color: isLight ? 'rgba(44,62,80,0.70)' : 'rgba(216,180,160,0.70)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.08em', opacity: 0.6 }}>{s.sublabel}</span>
+                  <span style={{ fontWeight: 500 }}>{s.label}</span>
+                </a>
               ))}
             </motion.div>
 
@@ -366,10 +441,11 @@ export default function Contact() {
           >
             <div className="rounded-3xl" style={{
               padding: 'clamp(20px, 5vw, 40px)',
-              background: 'rgba(255,255,255,0.03)',
-              border: '1px solid rgba(255,255,255,0.07)',
+              background: rightPanelBg,
+              border: `1px solid ${rightPanelBorder}`,
               backdropFilter: 'blur(16px)',
               minHeight: 420,
+              boxShadow: isLight ? '0 4px 32px rgba(0,0,0,0.06)' : 'none',
             }}>
 
               <AnimatePresence mode="wait">
@@ -388,25 +464,25 @@ export default function Contact() {
                         background: '#D8B4A0', display: 'flex', alignItems: 'center', justifyContent: 'center',
                         fontSize: '0.7rem', fontWeight: 700, color: '#111D2A', fontFamily: 'var(--font-inter)',
                       }}>1</div>
-                      <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+                      <div style={{ flex: 1, height: 1, background: stepDividerBg }} />
                       <div style={{
                         width: 22, height: 22, borderRadius: '50%',
-                        border: '1px solid rgba(255,255,255,0.12)',
+                        border: `1px solid ${isLight ? 'rgba(44,62,80,0.15)' : 'rgba(255,255,255,0.12)'}`,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        fontSize: '0.7rem', color: 'rgba(248,249,250,0.25)', fontFamily: 'var(--font-inter)',
+                        fontSize: '0.7rem', color: stepIndicatorSubColor, fontFamily: 'var(--font-inter)',
                       }}>2</div>
                     </div>
 
                     <p style={{
                       fontFamily: 'var(--font-cormorant)', fontSize: '1.3rem',
-                      fontStyle: 'italic', color: 'rgba(248,249,250,0.55)', marginBottom: 20,
+                      fontStyle: 'italic', color: stepSubtitleColor, marginBottom: 20,
                     }}>
                       Выберите удобный день и время
                     </p>
 
                     <BookingCalendar onSelect={(d, t) => {
                       setSelectedDate(d); setSelectedTime(t)
-                    }} />
+                    }} variant={variant} />
 
                     {/* Next button */}
                     <motion.div
@@ -483,7 +559,7 @@ export default function Contact() {
 
                     <p style={{
                       fontFamily: 'var(--font-cormorant)', fontSize: '1.3rem',
-                      fontStyle: 'italic', color: 'rgba(248,249,250,0.55)', marginBottom: 20,
+                      fontStyle: 'italic', color: stepSubtitleColor, marginBottom: 20,
                     }}>
                       Расскажите немного о себе
                     </p>
@@ -495,7 +571,7 @@ export default function Contact() {
                         placeholder="Ваше имя"
                         value={form.name}
                         onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                        style={inputBase(focused === 'name')}
+                        style={inputBase(focused === 'name', isLight)}
                         onFocus={() => setFocused('name')}
                         onBlur={() => setFocused(null)}
                       />
@@ -505,7 +581,7 @@ export default function Contact() {
                         placeholder="Телефон или Telegram"
                         value={form.phone}
                         onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
-                        style={inputBase(focused === 'phone')}
+                        style={inputBase(focused === 'phone', isLight)}
                         onFocus={() => setFocused('phone')}
                         onBlur={() => setFocused(null)}
                       />
@@ -514,7 +590,7 @@ export default function Contact() {
                         placeholder="С чем пришли? Опишите коротко свой запрос"
                         value={form.concern}
                         onChange={e => setForm(f => ({ ...f, concern: e.target.value }))}
-                        style={{ ...inputBase(focused === 'concern'), resize: 'none' }}
+                        style={{ ...inputBase(focused === 'concern', isLight), resize: 'none' }}
                         onFocus={() => setFocused('concern')}
                         onBlur={() => setFocused(null)}
                       />
@@ -537,7 +613,7 @@ export default function Contact() {
                       </button>
 
                       <p style={{
-                        textAlign: 'center', color: 'rgba(248,249,250,0.2)',
+                        textAlign: 'center', color: calendarNoticeColor,
                         fontFamily: 'var(--font-inter)', fontSize: '0.73rem', marginTop: 2,
                       }}>
                         Откроется окно Calendly для выбора финального слота
@@ -570,7 +646,8 @@ export default function Contact() {
                       Встреча забронирована
                     </p>
                     <p style={{
-                      color: 'rgba(248,249,250,0.4)', fontFamily: 'var(--font-open-sans)',
+                      color: isLight ? 'rgba(44,62,80,0.50)' : 'rgba(248,249,250,0.4)',
+                      fontFamily: 'var(--font-open-sans)',
                       fontSize: '0.9rem', lineHeight: 1.7, maxWidth: 300,
                     }}>
                       Подтверждение придёт на вашу почту. До встречи!
@@ -587,4 +664,3 @@ export default function Contact() {
     </section>
   )
 }
-

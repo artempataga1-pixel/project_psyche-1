@@ -35,9 +35,77 @@ const sectionText = {
   cta: 'Записаться',
 }
 
-export default function Pricing() {
+type Variant = 'light-a' | 'light-b'
+
+interface PricingProps {
+  variant?: Variant
+}
+
+export default function Pricing({ variant }: PricingProps) {
+  const isLight = variant === 'light-a' || variant === 'light-b'
+
+  const sectionBg = variant === 'light-a'
+    ? '#ECF1FA'
+    : variant === 'light-b'
+      ? '#FDF7F4'
+      : '#111D2A'
+
+  const labelColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.85)' : 'rgba(180,120,95,0.90)')
+    : 'rgba(216,180,160,0.7)'
+
+  const labelLineColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.40)' : 'rgba(216,180,160,0.65)')
+    : 'rgba(216,180,160,0.5)'
+
+  const titleColor = isLight ? '#2C3E50' : '#F8F9FA'
+  const bodyColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.45)'
+
+  const cardBg = (featured: boolean) => {
+    if (isLight) {
+      return featured
+        ? 'linear-gradient(160deg, rgba(74,111,165,0.10) 0%, rgba(58,90,138,0.06) 100%)'
+        : '#FFFFFF'
+    }
+    return featured
+      ? 'linear-gradient(160deg, rgba(74,111,165,0.22) 0%, rgba(58,90,138,0.15) 100%)'
+      : 'rgba(255,255,255,0.03)'
+  }
+
+  const cardBorder = (featured: boolean) => {
+    if (isLight) {
+      return featured
+        ? '1px solid rgba(74,111,165,0.30)'
+        : `1px solid ${variant === 'light-a' ? 'rgba(74,111,165,0.14)' : 'rgba(216,180,160,0.22)'}`
+    }
+    return featured
+      ? '1px solid rgba(74,111,165,0.4)'
+      : '1px solid rgba(255,255,255,0.07)'
+  }
+
+  const cardShadow = (featured: boolean) => {
+    if (isLight) {
+      return featured
+        ? '0 24px 60px rgba(74,111,165,0.12), inset 0 1px 0 rgba(255,255,255,0.5)'
+        : '0 2px 16px rgba(0,0,0,0.05)'
+    }
+    return featured
+      ? '0 24px 60px rgba(74,111,165,0.2), inset 0 1px 0 rgba(255,255,255,0.07)'
+      : 'none'
+  }
+
+  const cardTitleColor = isLight ? '#2C3E50' : '#F8F9FA'
+  const cardBodyColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.45)'
+  const cardPriceBorderColor = isLight ? 'rgba(44,62,80,0.08)' : 'rgba(255,255,255,0.06)'
+
+  const cardNonFeaturedCtaBorder = isLight
+    ? `1px solid ${variant === 'light-a' ? 'rgba(74,111,165,0.25)' : 'rgba(216,180,160,0.35)'}`
+    : '1px solid rgba(255,255,255,0.1)'
+
+  const cardNonFeaturedCtaColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.6)'
+
   return (
-    <section id="pricing" className="py-20 md:py-32" style={{ background: '#111D2A' }}>
+    <section id="pricing" className="py-20 md:py-32" style={{ background: sectionBg }}>
       <div className="max-w-6xl mx-auto px-5 sm:px-8 md:px-10">
 
         {/* Заголовок */}
@@ -49,21 +117,21 @@ export default function Pricing() {
           className="mb-12 md:mb-20 text-center"
         >
           <div className="flex items-center justify-center gap-4 mb-6">
-            <span style={{ display: 'block', width: '36px', height: '1px', background: 'rgba(216,180,160,0.5)' }} />
+            <span style={{ display: 'block', width: '36px', height: '1px', background: labelLineColor }} />
             <span
               className="text-xs font-semibold uppercase tracking-[0.15em]"
-              style={{ color: 'rgba(216,180,160,0.7)', fontFamily: 'var(--font-inter)' }}
+              style={{ color: labelColor, fontFamily: 'var(--font-inter)' }}
             >
               стоимость
             </span>
-            <span style={{ display: 'block', width: '36px', height: '1px', background: 'rgba(216,180,160,0.5)' }} />
+            <span style={{ display: 'block', width: '36px', height: '1px', background: labelLineColor }} />
           </div>
           <h2
             className="font-bold mb-5"
             style={{
               fontFamily: 'var(--font-cormorant)',
               fontSize: 'clamp(2.8rem, 5vw, 4rem)',
-              color: '#F8F9FA',
+              color: titleColor,
               lineHeight: 1.1,
             }}
           >
@@ -71,7 +139,7 @@ export default function Pricing() {
           </h2>
           <p
             style={{
-              color: 'rgba(248,249,250,0.45)',
+              color: bodyColor,
               maxWidth: 480,
               fontFamily: 'var(--font-open-sans)',
               lineHeight: 1.75,
@@ -95,15 +163,9 @@ export default function Pricing() {
               viewport={viewportOnce}
               className="rounded-3xl overflow-hidden flex flex-col relative"
               style={{
-                background: plan.featured
-                  ? 'linear-gradient(160deg, rgba(74,111,165,0.22) 0%, rgba(58,90,138,0.15) 100%)'
-                  : 'rgba(255,255,255,0.03)',
-                border: plan.featured
-                  ? '1px solid rgba(74,111,165,0.4)'
-                  : '1px solid rgba(255,255,255,0.07)',
-                boxShadow: plan.featured
-                  ? '0 24px 60px rgba(74,111,165,0.2), inset 0 1px 0 rgba(255,255,255,0.07)'
-                  : 'none',
+                background: cardBg(plan.featured),
+                border: cardBorder(plan.featured),
+                boxShadow: cardShadow(plan.featured),
               }}
             >
               {/* Верхняя светящаяся линия */}
@@ -149,7 +211,7 @@ export default function Pricing() {
                       fontFamily: 'var(--font-cormorant)',
                       fontSize: '1.65rem',
                       fontWeight: 600,
-                      color: '#F8F9FA',
+                      color: cardTitleColor,
                       lineHeight: 1.1,
                     }}
                   >
@@ -160,14 +222,14 @@ export default function Pricing() {
                 {/* Цена */}
                 <div
                   className="flex items-end gap-1 pb-6"
-                  style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+                  style={{ borderBottom: `1px solid ${cardPriceBorderColor}` }}
                 >
                   <span
                     style={{
                       fontFamily: 'var(--font-cormorant)',
                       fontSize: 'clamp(2.5rem, 7vw, 3.5rem)',
                       fontWeight: 700,
-                      color: plan.featured ? '#A8C8EE' : '#F8F9FA',
+                      color: plan.featured ? '#A8C8EE' : (isLight ? '#2C3E50' : '#F8F9FA'),
                       lineHeight: 0.95,
                     }}
                   >
@@ -177,7 +239,7 @@ export default function Pricing() {
                     style={{
                       fontFamily: 'var(--font-cormorant)',
                       fontSize: '1.4rem',
-                      color: plan.featured ? 'rgba(168,200,238,0.5)' : 'rgba(248,249,250,0.3)',
+                      color: plan.featured ? 'rgba(168,200,238,0.5)' : (isLight ? 'rgba(44,62,80,0.35)' : 'rgba(248,249,250,0.3)'),
                       paddingBottom: '4px',
                     }}
                   >
@@ -199,7 +261,7 @@ export default function Pricing() {
                   <p
                     className="text-sm leading-relaxed"
                     style={{
-                      color: 'rgba(248,249,250,0.45)',
+                      color: cardBodyColor,
                       fontFamily: 'var(--font-open-sans)',
                       lineHeight: 1.7,
                     }}
@@ -216,10 +278,10 @@ export default function Pricing() {
                     background: plan.featured
                       ? 'linear-gradient(135deg, #4A6FA5 0%, #3A5A8A 100%)'
                       : 'transparent',
-                    color: plan.featured ? '#fff' : 'rgba(248,249,250,0.6)',
+                    color: plan.featured ? '#fff' : cardNonFeaturedCtaColor,
                     fontFamily: 'var(--font-inter)',
                     boxShadow: plan.featured ? '0 6px 20px rgba(74,111,165,0.35)' : 'none',
-                    border: plan.featured ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                    border: plan.featured ? 'none' : cardNonFeaturedCtaBorder,
                     letterSpacing: '0.01em',
                     borderRadius: '9999px',
                   }}
@@ -238,7 +300,13 @@ export default function Pricing() {
           viewport={viewportOnce}
           transition={{ duration: 0.6, delay: 0.15 }}
           className="rounded-2xl flex items-start gap-4 md:gap-5"
-          style={{ padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 32px)', background: 'rgba(216,180,160,0.05)', border: '1px solid rgba(216,180,160,0.12)' }}
+          style={{
+            padding: 'clamp(16px, 4vw, 24px) clamp(16px, 4vw, 32px)',
+            background: isLight ? 'rgba(216,180,160,0.08)' : 'rgba(216,180,160,0.05)',
+            border: isLight
+              ? `1px solid ${variant === 'light-a' ? 'rgba(74,111,165,0.14)' : 'rgba(216,180,160,0.22)'}`
+              : '1px solid rgba(216,180,160,0.12)',
+          }}
         >
           <span
             style={{
@@ -254,7 +322,7 @@ export default function Pricing() {
           </span>
           <p
             style={{
-              color: 'rgba(248,249,250,0.45)',
+              color: isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.45)',
               fontFamily: 'var(--font-open-sans)',
               lineHeight: 1.75,
               fontSize: '0.93rem',

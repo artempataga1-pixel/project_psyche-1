@@ -72,7 +72,13 @@ const SketchPlant = () => (
 
 const sketches = [SketchPalette, SketchBrain, SketchCards, SketchPlant]
 
-const CornerMark = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) => {
+type Variant = 'light-a' | 'light-b'
+
+interface MethodsProps {
+  variant?: Variant
+}
+
+function CornerMark({ position, stroke }: { position: 'tl' | 'tr' | 'bl' | 'br'; stroke: string }) {
   const map: Record<string, React.CSSProperties> = {
     tl: { top: 10, left: 10 },
     tr: { top: 10, right: 10, transform: 'rotate(90deg)' },
@@ -82,7 +88,7 @@ const CornerMark = ({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) => {
   return (
     <svg
       width="14" height="14" viewBox="0 0 14 14" fill="none"
-      stroke="rgba(216,180,160,0.2)" strokeWidth="1"
+      stroke={stroke} strokeWidth="1"
       style={{ position: 'absolute', ...map[position] }}
     >
       <path d="M1 13 L1 1 L13 1" />
@@ -102,8 +108,21 @@ const cardReveal: Variants = {
   }),
 }
 
-function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number }) {
+function MethodCard({ item, idx, variant }: { item: typeof content.items[0]; idx: number; variant?: Variant }) {
   const Sketch = sketches[idx]
+  const isLight = variant === 'light-a' || variant === 'light-b'
+
+  const cardBg = isLight ? '#FFFFFF' : 'rgba(255,255,255,0.04)'
+  const cardBorder = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.14)' : 'rgba(216,180,160,0.22)')
+    : 'rgba(255,255,255,0.08)'
+  const cornerStroke = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.18)' : 'rgba(216,180,160,0.30)')
+    : 'rgba(216,180,160,0.2)'
+  const titleColor = isLight ? '#2C3E50' : '#F8F9FA'
+  const bodyColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.55)'
+  const sketchColor = isLight ? (variant === 'light-a' ? '#4A6FA5' : '#D8B4A0') : '#D8B4A0'
+
   return (
     <motion.div
       custom={idx}
@@ -113,17 +132,18 @@ function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number 
       viewport={viewportOnce}
       className="relative"
       style={{
-        background: 'rgba(255,255,255,0.04)',
-        border: '1px solid rgba(255,255,255,0.08)',
+        background: cardBg,
+        border: `1px solid ${cardBorder}`,
         borderRadius: '20px',
         padding: 'clamp(20px, 4vw, 36px) clamp(18px, 4vw, 32px) clamp(20px, 4vw, 32px)',
-        backdropFilter: 'blur(8px)',
+        backdropFilter: isLight ? 'none' : 'blur(8px)',
+        boxShadow: isLight ? '0 2px 16px rgba(0,0,0,0.05)' : 'none',
       }}
     >
-      <CornerMark position="tl" />
-      <CornerMark position="tr" />
-      <CornerMark position="bl" />
-      <CornerMark position="br" />
+      <CornerMark position="tl" stroke={cornerStroke} />
+      <CornerMark position="tr" stroke={cornerStroke} />
+      <CornerMark position="bl" stroke={cornerStroke} />
+      <CornerMark position="br" stroke={cornerStroke} />
 
       {/* Номер */}
       <span
@@ -145,7 +165,7 @@ function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number 
           fontFamily: 'var(--font-cormorant)',
           fontSize: 'clamp(1.3rem, 2vw, 1.55rem)',
           fontWeight: 600,
-          color: '#F8F9FA',
+          color: titleColor,
           lineHeight: 1.2,
           marginBottom: '12px',
         }}
@@ -158,7 +178,7 @@ function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number 
         style={{
           fontFamily: 'var(--font-open-sans)',
           fontSize: '0.9rem',
-          color: 'rgba(248,249,250,0.55)',
+          color: bodyColor,
           lineHeight: 1.75,
         }}
       >
@@ -170,8 +190,8 @@ function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number 
         <div style={{ width: '28px', height: '1px', background: 'rgba(216,180,160,0.3)', marginBottom: '4px' }} />
         <div
           style={{
-            color: '#D8B4A0',
-            opacity: 0.5,
+            color: sketchColor,
+            opacity: isLight ? 0.65 : 0.5,
             transform: 'rotate(6deg)',
             pointerEvents: 'none',
             flexShrink: 0,
@@ -184,9 +204,28 @@ function MethodCard({ item, idx }: { item: typeof content.items[0]; idx: number 
   )
 }
 
-export default function Methods() {
+export default function Methods({ variant }: MethodsProps) {
+  const isLight = variant === 'light-a' || variant === 'light-b'
+
+  const sectionBg = variant === 'light-a'
+    ? '#E5EBF7'
+    : variant === 'light-b'
+      ? '#FBF2EE'
+      : '#1C2B3A'
+
+  const labelColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.85)' : 'rgba(180,120,95,0.90)')
+    : 'rgba(216,180,160,0.7)'
+
+  const labelLineColor = isLight
+    ? (variant === 'light-a' ? 'rgba(74,111,165,0.40)' : 'rgba(216,180,160,0.65)')
+    : 'rgba(216,180,160,0.5)'
+
+  const titleColor = isLight ? '#2C3E50' : '#F8F9FA'
+  const bodyColor = isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.45)'
+
   return (
-    <section id="methods" className="py-20 md:py-32" style={{ background: '#1C2B3A' }}>
+    <section id="methods" className="py-20 md:py-32" style={{ background: sectionBg }}>
       <div className="max-w-5xl mx-auto px-5 sm:px-8 md:px-10">
 
         {/* Заголовок */}
@@ -198,10 +237,10 @@ export default function Methods() {
           className="mb-10 md:mb-16"
         >
           <div className="flex items-center gap-4 mb-6">
-            <span style={{ display: 'block', width: '36px', height: '1px', background: 'rgba(216,180,160,0.5)' }} />
+            <span style={{ display: 'block', width: '36px', height: '1px', background: labelLineColor }} />
             <span
               className="text-xs font-semibold uppercase tracking-[0.15em]"
-              style={{ color: 'rgba(216,180,160,0.7)', fontFamily: 'var(--font-inter)' }}
+              style={{ color: labelColor, fontFamily: 'var(--font-inter)' }}
             >
               инструменты
             </span>
@@ -212,7 +251,7 @@ export default function Methods() {
               style={{
                 fontFamily: 'var(--font-cormorant)',
                 fontSize: 'clamp(2.8rem, 5vw, 4rem)',
-                color: '#F8F9FA',
+                color: titleColor,
                 lineHeight: 1.1,
               }}
             >
@@ -221,7 +260,7 @@ export default function Methods() {
             <p
               className="min-w-0"
               style={{
-                color: 'rgba(248,249,250,0.45)',
+                color: bodyColor,
                 maxWidth: '380px',
                 fontFamily: 'var(--font-open-sans)',
                 lineHeight: 1.75,
@@ -237,7 +276,7 @@ export default function Methods() {
         {/* 2×2 сетка: на мобиле 1 колонка, на md+ 2 колонки */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
           {content.items.map((item, i) => (
-            <MethodCard key={i} item={item} idx={i} />
+            <MethodCard key={i} item={item} idx={i} variant={variant} />
           ))}
         </div>
 

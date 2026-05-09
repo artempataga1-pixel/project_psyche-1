@@ -12,22 +12,70 @@ const ShaderLines = dynamic(() => import('@/components/three/ShaderLines'), {
   loading: () => null,
 })
 
-export default function Hero() {
+type Variant = 'light-a' | 'light-b'
+
+interface HeroProps {
+  variant?: Variant
+}
+
+export default function Hero({ variant }: HeroProps) {
+  const isLight = variant === 'light-a' || variant === 'light-b'
+
+  const t = {
+    bg: variant === 'light-a'
+      ? '#ECF1FA'
+      : variant === 'light-b'
+        ? '#FDF7F4'
+        : '#111D2A',
+    bottomFade: variant === 'light-a'
+      ? 'linear-gradient(to bottom, transparent, #ECF1FA)'
+      : variant === 'light-b'
+        ? 'linear-gradient(to bottom, transparent, #FDF7F4)'
+        : 'linear-gradient(to bottom, transparent, #111D2A)',
+    glowBlob1: variant === 'light-a'
+      ? 'radial-gradient(circle, rgba(74,111,165,0.15) 0%, transparent 70%)'
+      : variant === 'light-b'
+        ? 'radial-gradient(circle, rgba(216,180,160,0.18) 0%, transparent 70%)'
+        : 'radial-gradient(circle, rgba(74,111,165,0.12) 0%, transparent 70%)',
+    glowBlob2: variant === 'light-a'
+      ? 'radial-gradient(circle, rgba(74,111,165,0.10) 0%, transparent 70%)'
+      : variant === 'light-b'
+        ? 'radial-gradient(circle, rgba(216,180,160,0.14) 0%, transparent 70%)'
+        : 'radial-gradient(circle, rgba(216,180,160,0.08) 0%, transparent 70%)',
+    title: isLight ? '#2C3E50' : '#F8F9FA',
+    body: isLight ? 'rgba(44,62,80,0.65)' : 'rgba(248,249,250,0.55)',
+    label: isLight
+      ? (variant === 'light-a' ? 'rgba(74,111,165,0.85)' : 'rgba(180,120,95,0.90)')
+      : 'rgba(216,180,160,0.75)',
+    labelLine: isLight
+      ? (variant === 'light-a' ? 'rgba(74,111,165,0.40)' : 'rgba(216,180,160,0.65)')
+      : 'rgba(216,180,160,0.5)',
+    tagText: isLight ? 'rgba(44,62,80,0.45)' : 'rgba(248,249,250,0.35)',
+    tagLine: isLight ? 'rgba(44,62,80,0.18)' : 'rgba(248,249,250,0.15)',
+    secondaryBtnBorder: isLight ? 'rgba(44,62,80,0.20)' : 'rgba(248,249,250,0.18)',
+    secondaryBtnColor: isLight ? 'rgba(44,62,80,0.75)' : 'rgba(248,249,250,0.75)',
+    secondaryBtnBg: isLight ? 'rgba(44,62,80,0.04)' : 'rgba(255,255,255,0.04)',
+    scrollLabel: isLight ? 'rgba(44,62,80,0.25)' : 'rgba(248,249,250,0.2)',
+    badgeBg: isLight ? 'rgba(255,255,255,0.85)' : 'rgba(17,29,42,0.7)',
+    badgeText: isLight ? 'rgba(44,62,80,0.75)' : 'rgba(248,249,250,0.8)',
+    badgeBorder: isLight ? 'rgba(44,62,80,0.12)' : 'rgba(216,180,160,0.2)',
+  }
+
   return (
     <section
       id="hero"
       className="relative min-h-screen flex items-center"
-      style={{ background: '#111D2A', overflow: 'hidden' }}
+      style={{ background: t.bg, overflow: 'hidden' }}
     >
       {/* Ambient glow blobs */}
       <div className="absolute pointer-events-none" style={{
         top: '-10%', right: '0%', width: '50vw', height: '50vw',
-        background: 'radial-gradient(circle, rgba(74,111,165,0.12) 0%, transparent 70%)',
+        background: t.glowBlob1,
         filter: 'blur(60px)',
       }} />
       <div className="absolute pointer-events-none" style={{
         bottom: '5%', left: '0%', width: '40vw', height: '40vw',
-        background: 'radial-gradient(circle, rgba(216,180,160,0.08) 0%, transparent 70%)',
+        background: t.glowBlob2,
         filter: 'blur(80px)',
       }} />
       {/* Warm glow behind photo */}
@@ -37,11 +85,11 @@ export default function Hero() {
         filter: 'blur(40px)',
       }} />
 
-      <ShaderLines />
+      {!isLight && <ShaderLines />}
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, #111D2A)' }} />
+        style={{ background: t.bottomFade }} />
 
       {/* Main content */}
       <div className="relative z-10 w-full max-w-6xl mx-auto px-5 sm:px-8 lg:px-[clamp(2rem,5vw,5rem)] pt-28 pb-20 sm:pt-36 sm:pb-28 md:pt-40 md:pb-32 flex flex-col lg:flex-row items-center gap-10 lg:gap-0">
@@ -56,7 +104,7 @@ export default function Hero() {
         >
           <div className="relative rounded-[24px] overflow-hidden" style={{
             border: '1px solid rgba(216,180,160,0.2)',
-            boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
+            boxShadow: isLight ? '0 20px 60px rgba(0,0,0,0.12)' : '0 20px 60px rgba(0,0,0,0.4)',
           }}>
             <Image
               src="/hero-photo.jpg"
@@ -73,20 +121,24 @@ export default function Hero() {
               }}
             />
             <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'linear-gradient(to right, rgba(17,29,42,0.3) 0%, transparent 30%, transparent 70%, rgba(17,29,42,0.2) 100%)',
+              background: isLight
+                ? 'linear-gradient(to right, rgba(255,255,255,0.1) 0%, transparent 30%, transparent 70%, rgba(255,255,255,0.05) 100%)'
+                : 'linear-gradient(to right, rgba(17,29,42,0.3) 0%, transparent 30%, transparent 70%, rgba(17,29,42,0.2) 100%)',
             }} />
             <div className="absolute bottom-0 left-0 right-0 h-20 pointer-events-none" style={{
-              background: 'linear-gradient(to top, rgba(17,29,42,0.5) 0%, transparent 100%)',
+              background: isLight
+                ? `linear-gradient(to top, ${variant === 'light-b' ? 'rgba(253,247,244,0.6)' : 'rgba(236,241,250,0.6)'} 0%, transparent 100%)`
+                : 'linear-gradient(to top, rgba(17,29,42,0.5) 0%, transparent 100%)',
             }} />
             <div className="absolute bottom-4 left-4 right-4 pointer-events-none">
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 8,
-                background: 'rgba(17,29,42,0.7)', backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(216,180,160,0.2)',
+                background: t.badgeBg, backdropFilter: 'blur(12px)',
+                border: `1px solid ${t.badgeBorder}`,
                 borderRadius: 999, padding: '6px 12px',
               }}>
                 <span style={{ display: 'block', width: 7, height: 7, borderRadius: '50%', background: '#D8B4A0', flexShrink: 0 }} />
-                <span style={{ fontFamily: 'var(--font-inter)', fontSize: '0.75rem', color: 'rgba(248,249,250,0.8)', fontWeight: 500 }}>
+                <span style={{ fontFamily: 'var(--font-inter)', fontSize: '0.75rem', color: t.badgeText, fontWeight: 500 }}>
                   Юлия · психолог, арт-терапевт
                 </span>
               </div>
@@ -103,17 +155,17 @@ export default function Hero() {
         >
           <motion.div variants={staggerItem} className="mb-7 sm:mb-10">
             <span className="inline-flex items-center gap-2 sm:gap-3 text-xs font-semibold uppercase tracking-[0.12em] sm:tracking-[0.18em]"
-              style={{ color: 'rgba(216,180,160,0.75)', fontFamily: 'var(--font-inter)' }}>
-              <span style={{ display: 'block', width: '20px', height: '1px', background: 'rgba(216,180,160,0.5)', flexShrink: 0 }} />
+              style={{ color: t.label, fontFamily: 'var(--font-inter)' }}>
+              <span style={{ display: 'block', width: '20px', height: '1px', background: t.labelLine, flexShrink: 0 }} />
               {hero.badge}
-              <span style={{ display: 'block', width: '20px', height: '1px', background: 'rgba(216,180,160,0.5)', flexShrink: 0 }} />
+              <span style={{ display: 'block', width: '20px', height: '1px', background: t.labelLine, flexShrink: 0 }} />
             </span>
           </motion.div>
 
           <motion.h1 variants={staggerItem} className="font-bold mb-6 sm:mb-8" style={{
             fontFamily: 'var(--font-cormorant)',
             fontSize: 'clamp(2.2rem, 5.5vw, 5.5rem)',
-            color: '#F8F9FA', lineHeight: 1.05,
+            color: t.title, lineHeight: 1.05,
             letterSpacing: '-0.01em',
           }}>
             {hero.title.line1}
@@ -124,7 +176,7 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p variants={staggerItem} className="mb-8 sm:mb-12" style={{
-            color: 'rgba(248,249,250,0.55)', maxWidth: '420px',
+            color: t.body, maxWidth: '420px',
             fontFamily: 'var(--font-open-sans)', lineHeight: 1.8,
             fontSize: 'clamp(0.9rem, 2.2vw, 1.125rem)',
           }}>
@@ -145,11 +197,11 @@ export default function Hero() {
             <HolographicButton href="#about"
               className="inline-flex items-center justify-center font-medium rounded-full"
               style={{
-                border: '1px solid rgba(248,249,250,0.18)',
-                color: 'rgba(248,249,250,0.75)', padding: '14px 28px',
+                border: `1px solid ${t.secondaryBtnBorder}`,
+                color: t.secondaryBtnColor, padding: '14px 28px',
                 fontSize: '0.95rem', fontFamily: 'var(--font-inter)',
                 letterSpacing: '0.01em', backdropFilter: 'blur(8px)',
-                background: 'rgba(255,255,255,0.04)', borderRadius: '9999px',
+                background: t.secondaryBtnBg, borderRadius: '9999px',
                 display: 'inline-flex', minHeight: '44px',
               }}>{hero.cta.secondary}</HolographicButton>
           </motion.div>
@@ -157,11 +209,11 @@ export default function Hero() {
           <motion.div variants={staggerItem} className="flex flex-wrap items-center gap-x-0 gap-y-2">
             {hero.tags.map((tag, i) => (
               <span key={tag} className="flex items-center">
-                <span className="text-sm" style={{ color: 'rgba(248,249,250,0.35)', fontFamily: 'var(--font-inter)', fontSize: 'clamp(0.75rem, 1.8vw, 0.875rem)' }}>
+                <span className="text-sm" style={{ color: t.tagText, fontFamily: 'var(--font-inter)', fontSize: 'clamp(0.75rem, 1.8vw, 0.875rem)' }}>
                   {tag}
                 </span>
                 {i < hero.tags.length - 1 && (
-                  <span style={{ width: '1px', height: '12px', background: 'rgba(248,249,250,0.15)', display: 'block', margin: '0 10px', flexShrink: 0 }} />
+                  <span style={{ width: '1px', height: '12px', background: t.tagLine, display: 'block', margin: '0 10px', flexShrink: 0 }} />
                 )}
               </span>
             ))}
@@ -194,7 +246,9 @@ export default function Hero() {
           {/* Photo frame */}
           <div className="relative rounded-[32px] overflow-hidden" style={{
             border: '1px solid rgba(216,180,160,0.2)',
-            boxShadow: '0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.05)',
+            boxShadow: isLight
+              ? '0 32px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(255,255,255,0.4)'
+              : '0 32px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.05)',
           }}>
             <Image
               src="/hero-photo.jpg"
@@ -211,21 +265,25 @@ export default function Hero() {
               }}
             />
 
-            {/* Gradient mask — left edge blends into dark bg */}
+            {/* Gradient mask — left edge blends into bg */}
             <div className="absolute inset-0 pointer-events-none" style={{
-              background: 'linear-gradient(to right, rgba(17,29,42,0.35) 0%, transparent 25%, transparent 75%, rgba(17,29,42,0.2) 100%)',
+              background: isLight
+                ? 'linear-gradient(to right, rgba(255,255,255,0.15) 0%, transparent 25%, transparent 75%, rgba(255,255,255,0.08) 100%)'
+                : 'linear-gradient(to right, rgba(17,29,42,0.35) 0%, transparent 25%, transparent 75%, rgba(17,29,42,0.2) 100%)',
             }} />
             {/* Gradient mask — bottom */}
             <div className="absolute bottom-0 left-0 right-0 h-28 pointer-events-none" style={{
-              background: 'linear-gradient(to top, rgba(17,29,42,0.55) 0%, transparent 100%)',
+              background: isLight
+                ? `linear-gradient(to top, ${variant === 'light-b' ? 'rgba(253,247,244,0.5)' : 'rgba(236,241,250,0.5)'} 0%, transparent 100%)`
+                : 'linear-gradient(to top, rgba(17,29,42,0.55) 0%, transparent 100%)',
             }} />
 
             {/* Floating name badge */}
             <div className="absolute bottom-5 left-5 right-5 pointer-events-none">
               <div style={{
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                background: 'rgba(17,29,42,0.7)', backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(216,180,160,0.2)',
+                background: t.badgeBg, backdropFilter: 'blur(12px)',
+                border: `1px solid ${t.badgeBorder}`,
                 borderRadius: 999, padding: '8px 16px',
               }}>
                 <span style={{
@@ -234,7 +292,7 @@ export default function Hero() {
                 }} />
                 <span style={{
                   fontFamily: 'var(--font-inter)', fontSize: '0.8rem',
-                  color: 'rgba(248,249,250,0.8)', fontWeight: 500,
+                  color: t.badgeText, fontWeight: 500,
                   letterSpacing: '0.02em',
                 }}>Юлия · психолог, арт-терапевт</span>
               </div>
@@ -267,7 +325,7 @@ export default function Hero() {
         transition={{ delay: 2, duration: 1 }}
       >
         <span className="text-xs uppercase tracking-[0.18em]"
-          style={{ color: 'rgba(248,249,250,0.2)', fontFamily: 'var(--font-inter)' }}>
+          style={{ color: t.scrollLabel, fontFamily: 'var(--font-inter)' }}>
           {hero.scroll}
         </span>
         <motion.div

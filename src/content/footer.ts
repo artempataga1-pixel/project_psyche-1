@@ -7,7 +7,9 @@ export const footer = {
     { href: '/offer',   label: 'Договор оферты' },
   ],
   socials: [
-    { href: 'https://t.me/', label: 'Telegram', icon: '✈️' },
+    { href: 'https://t.me/juulymart',                                              label: 'Telegram',    icon: '✈️' },
+    { href: 'https://t.me/martherapy',                                             label: 'ТГ‑канал',    icon: '📣' },
+    { href: 'https://max.ru/join/dGQVStfcY4VjgwJgRcVffEzdSlFN-rW3fYhZG9lqN44',   label: 'MAX',         icon: '💬' },
   ],
   legal: {
     name: 'Самозанятая Погорелова Юлия Петровна',
