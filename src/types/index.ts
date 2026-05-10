@@ -11,7 +11,10 @@ export interface PricingPlan {
   id: string
   badge: string
   title: string
-  price: number
+  priceOnline: number
+  priceOffline: number
+  savingsOnline?: number
+  savingsOffline?: number
   duration: string
   description: string
   featured: boolean

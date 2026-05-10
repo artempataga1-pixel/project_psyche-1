@@ -33,27 +33,27 @@ export default function Home() {
     <>
       <Navbar />
       <main>
-        <Hero />
-        <Fade from="#111D2A" to="#FAF7F4" />
+        <Hero variant="light-b" />
+        <Fade from="#FDF7F4" to="#FAF7F4" />
         <Problems />
         <Fade from="#FAF7F4" to="#F8F9FA" />
         <About />
-        <Fade from="#F8F9FA" to="#1C2B3A" />
-        <Methods />
-        <Fade from="#1C2B3A" to="#FAF7F4" />
+        <Fade from="#F8F9FA" to="#FBF2EE" />
+        <Methods variant="light-b" />
+        <Fade from="#FBF2EE" to="#FAF7F4" />
         <Formats />
-        <Fade from="#FAF7F4" to="#111D2A" />
-        <Pricing />
-        <Fade from="#111D2A" to="#FAF7F4" />
+        <Fade from="#FAF7F4" to="#FDF7F4" />
+        <Pricing variant="light-b" />
+        <Fade from="#FDF7F4" to="#FAF7F4" />
         <Testimonials />
         <Fade from="#FAF7F4" to="#F8F9FA" />
         <FAQ />
         <Fade from="#F8F9FA" to="#F8F9FA" />
         <Blog />
-        <Fade from="#F8F9FA" to="#111D2A" />
-        <Contact />
+        <Fade from="#F8F9FA" to="#FDF7F4" />
+        <Contact variant="light-b" />
       </main>
-      <Footer />
+      <Footer variant="light-b" />
     </>
   )
 }

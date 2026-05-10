@@ -220,31 +220,54 @@ export default function Pricing({ variant }: PricingProps) {
                 </div>
 
                 {/* Цена */}
-                <div
-                  className="flex items-end gap-1 pb-6"
-                  style={{ borderBottom: `1px solid ${cardPriceBorderColor}` }}
-                >
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-cormorant)',
-                      fontSize: 'clamp(2.5rem, 7vw, 3.5rem)',
-                      fontWeight: 700,
-                      color: plan.featured ? '#A8C8EE' : (isLight ? '#2C3E50' : '#F8F9FA'),
-                      lineHeight: 0.95,
-                    }}
-                  >
-                    {plan.price.toLocaleString('ru-RU')}
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-cormorant)',
-                      fontSize: '1.4rem',
-                      color: plan.featured ? 'rgba(168,200,238,0.5)' : (isLight ? 'rgba(44,62,80,0.35)' : 'rgba(248,249,250,0.3)'),
-                      paddingBottom: '4px',
-                    }}
-                  >
-                    ₽
-                  </span>
+                <div className="pb-6 flex flex-col gap-1" style={{ borderBottom: `1px solid ${cardPriceBorderColor}` }}>
+                  {plan.priceOnline === plan.priceOffline ? (
+                    /* Одинаковая цена */
+                    <div className="flex items-end gap-1">
+                      <span style={{
+                        fontFamily: 'var(--font-cormorant)',
+                        fontSize: 'clamp(2.5rem, 7vw, 3.5rem)',
+                        fontWeight: 700,
+                        color: plan.featured ? '#A8C8EE' : (isLight ? '#2C3E50' : '#F8F9FA'),
+                        lineHeight: 0.95,
+                      }}>
+                        {plan.priceOnline.toLocaleString('ru-RU')}
+                      </span>
+                      <span style={{
+                        fontFamily: 'var(--font-cormorant)', fontSize: '1.4rem',
+                        color: plan.featured ? 'rgba(168,200,238,0.5)' : (isLight ? 'rgba(44,62,80,0.35)' : 'rgba(248,249,250,0.3)'),
+                        paddingBottom: '4px',
+                      }}>₽</span>
+                    </div>
+                  ) : (
+                    /* Разные цены онлайн/очно */
+                    <div className="flex flex-col gap-1.5">
+                      {[
+                        { label: 'онлайн', price: plan.priceOnline, savings: plan.savingsOnline },
+                        { label: 'очно',   price: plan.priceOffline, savings: plan.savingsOffline },
+                      ].map(row => (
+                        <div key={row.label} className="flex items-baseline gap-2 flex-wrap">
+                          <span style={{
+                            fontFamily: 'var(--font-cormorant)',
+                            fontSize: 'clamp(1.8rem, 5vw, 2.5rem)',
+                            fontWeight: 700,
+                            color: plan.featured ? '#A8C8EE' : (isLight ? '#2C3E50' : '#F8F9FA'),
+                            lineHeight: 1,
+                          }}>
+                            {row.price.toLocaleString('ru-RU')} ₽
+                          </span>
+                          <span style={{
+                            fontFamily: 'var(--font-inter)', fontSize: '0.72rem',
+                            color: isLight ? 'rgba(44,62,80,0.45)' : 'rgba(248,249,250,0.35)',
+                            textTransform: 'uppercase', letterSpacing: '0.08em',
+                          }}>
+                            {row.label}
+                            {row.savings ? ` · −${row.savings.toLocaleString('ru-RU')} ₽` : ''}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Длительность + описание */}
