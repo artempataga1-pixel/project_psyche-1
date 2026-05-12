@@ -376,8 +376,6 @@ export default function Contact({ variant }: { variant?: Variant }) {
 
             <motion.div variants={staggerItem} className="flex flex-col gap-4 md:gap-5 mb-8 md:mb-12">
               {[
-                { text: contact.phone, label: 'телефон' },
-                { text: contact.email, label: 'почта' },
                 { text: contact.address, label: 'адрес' },
               ].map(item => (
                 <div key={item.text} className="flex items-start gap-5">

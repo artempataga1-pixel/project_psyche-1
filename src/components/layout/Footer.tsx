@@ -54,11 +54,6 @@ export default function Footer({ variant }: FooterProps) {
         {/* Разделитель */}
         <div className="mt-10 mb-5" style={{ height: '1px', background: midDivider }} />
 
-        {/* Юридическая информация */}
-        <p className="text-xs leading-relaxed" style={{ color: legalColor, fontFamily: 'var(--font-inter)' }}>
-          {footer.legal.name}&nbsp;·&nbsp;ИНН&nbsp;{footer.legal.inn}&nbsp;·&nbsp;{footer.legal.address}
-        </p>
-
         <p className="text-center text-xs mt-6" style={{ color: copyColor, fontFamily: 'var(--font-inter)' }}>
           © {footer.year} Все права защищены.
         </p>
