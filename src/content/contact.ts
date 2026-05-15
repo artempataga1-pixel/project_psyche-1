@@ -11,5 +11,5 @@ export const contact = {
     { href: 'https://t.me/martherapy',                                           label: 'martherapy',  sublabel: 'тг‑канал' },
     { href: 'https://max.ru/join/dGQVStfcY4VjgwJgRcVffEzdSlFN-rW3fYhZG9lqN44', label: 'MAX канал',   sublabel: 'max' },
   ],
-  botUsername: 'martherapy_bot',
+  botUsername: 'marthetrapy_bot',
 }
