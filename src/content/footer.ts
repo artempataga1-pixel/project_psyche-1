@@ -1,7 +1,7 @@
 export const footer = {
   brand: 'мАртерапия',
   tagline: 'Пространство для встречи с собой.',
-  year: 2025,
+  year: 2026,
   links: [],
   socials: [
     { href: 'https://t.me/juulymart',                                              label: 'Telegram',    icon: '✈️' },
