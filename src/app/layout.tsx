@@ -17,14 +17,14 @@ const openSans = Open_Sans({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://psyche-and-pen.ru'),
-  title: 'Юлия — психолог, арт-терапевт | Психея и Перо',
+  title: 'Юлия — психолог, арт-терапевт | мАртерапия',
   description: 'Интегративная терапия для чувствительных и творческих людей. КПТ, арт-терапия, работа с тревогой, творческими блоками, жизненными кризисами. Онлайн и очно.',
   keywords: 'психолог, арт-терапевт, КПТ, арт-терапия, тревога, онлайн терапия',
   openGraph: {
     title: 'Юлия — психолог, арт-терапевт',
     description: 'Глубинная терапия для чувствительных и творческих натур',
     url: 'https://psyche-and-pen.ru',
-    siteName: 'Психея и Перо',
+    siteName: 'мАртерапия',
     locale: 'ru_RU',
     type: 'website',
     images: [
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
         url: '/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Психея и Перо — психолог Юлия',
+        alt: 'мАртерапия — психолог Юлия',
       },
     ],
   },

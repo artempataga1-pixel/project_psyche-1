@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Публичная оферта | Психея и Перо',
+  title: 'Публичная оферта | мАртерапия',
   description:
     'Публичная оферта — договор на оказание психологических консультационных услуг. Самозанятая Погорелова Юлия Петровна.',
   robots: { index: false, follow: false },

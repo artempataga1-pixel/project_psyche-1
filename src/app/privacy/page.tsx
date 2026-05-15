@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Политика конфиденциальности | Психея и Перо',
+  title: 'Политика конфиденциальности | мАртерапия',
   description:
     'Политика обработки персональных данных в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».',
   robots: { index: false, follow: false },

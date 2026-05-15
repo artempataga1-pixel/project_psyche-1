@@ -1,5 +1,5 @@
 export const nav = {
-  logo: { text1: 'Психея', text2: ' и Перо' },
+  logo: { text1: 'мАрт', text2: 'ерапия' },
   links: [
     { href: '#about',   label: 'Обо мне'   },
     { href: '#methods', label: 'Методы'    },

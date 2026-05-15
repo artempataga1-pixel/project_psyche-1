@@ -1,5 +1,5 @@
 export const footer = {
-  brand: 'Психея и Перо',
+  brand: 'мАртерапия',
   tagline: 'Пространство для встречи с собой.',
   year: 2025,
   links: [

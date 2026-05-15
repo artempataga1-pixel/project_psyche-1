@@ -423,7 +423,7 @@ export default function Contact({ variant }: { variant?: Variant }) {
 
             <motion.p variants={staggerItem} style={{
               fontFamily: 'var(--font-cormorant)', fontSize: 'clamp(1.2rem, 1.8vw, 1.4rem)',
-              fontStyle: 'italic', color: 'rgba(216,180,160,0.5)', lineHeight: 1.55, maxWidth: 360,
+              fontStyle: 'italic', color: isLight ? 'rgba(44,62,80,0.55)' : 'rgba(216,180,160,0.5)', lineHeight: 1.55, maxWidth: 360,
             }}>
               {contact.closing}
             </motion.p>

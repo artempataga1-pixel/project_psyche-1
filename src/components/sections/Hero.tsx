@@ -1,16 +1,10 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { staggerContainer, staggerItem } from '@/lib/animations'
 import { hero } from '@/content/hero'
 import { HolographicButton } from '@/components/ui/holographic-button'
-
-const ShaderLines = dynamic(() => import('@/components/three/ShaderLines'), {
-  ssr: false,
-  loading: () => null,
-})
 
 type Variant = 'light-a' | 'light-b'
 
@@ -84,14 +78,6 @@ export default function Hero({ variant }: HeroProps) {
         background: 'radial-gradient(ellipse at 60% 40%, rgba(216,180,160,0.07) 0%, transparent 65%)',
         filter: 'blur(40px)',
       }} />
-
-      {/* ShaderLines: on dark — additive glow; on light — multiply blend for subtle dark lines (desktop only) */}
-      {!isLight && <ShaderLines />}
-      {variant === 'light-b' && (
-        <div className="absolute inset-0 pointer-events-none hidden md:block" style={{ mixBlendMode: 'multiply', opacity: 0.82 }}>
-          <ShaderLines />
-        </div>
-      )}
 
       {/* Bottom fade */}
       <div className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none"
