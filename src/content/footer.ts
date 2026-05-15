@@ -2,10 +2,7 @@ export const footer = {
   brand: 'мАртерапия',
   tagline: 'Пространство для встречи с собой.',
   year: 2025,
-  links: [
-    { href: '/privacy', label: 'Политика конфиденциальности' },
-    { href: '/offer',   label: 'Договор оферты' },
-  ],
+  links: [],
   socials: [
     { href: 'https://t.me/juulymart',                                              label: 'Telegram',    icon: '✈️' },
     { href: 'https://t.me/martherapy',                                             label: 'ТГ‑канал',    icon: '📣' },

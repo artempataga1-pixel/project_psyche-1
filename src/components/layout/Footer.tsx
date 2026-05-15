@@ -28,17 +28,6 @@ export default function Footer({ variant }: FooterProps) {
 
         <div className="flex flex-col md:flex-row items-start justify-between gap-8">
 
-          {/* Навигация */}
-          <div className="flex flex-wrap gap-x-8 gap-y-2">
-            {footer.links.map(l => (
-              <a key={l.label} href={l.href}
-                className="text-sm transition-opacity hover:opacity-100"
-                style={{ color: linkColor, fontFamily: 'var(--font-inter)' }}>
-                {l.label}
-              </a>
-            ))}
-          </div>
-
           {/* Социальные сети */}
           <div className="flex gap-4">
             {footer.socials.map(s => (
