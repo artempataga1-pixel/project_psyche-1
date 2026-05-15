@@ -1,7 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import { m } from 'framer-motion'
+import { useRef } from 'react'
+import { m, useInView } from 'framer-motion'
 import { staggerContainer, staggerItem } from '@/lib/animations'
 import { hero } from '@/content/hero'
 import { HolographicButton } from '@/components/ui/holographic-button'
@@ -14,6 +15,8 @@ interface HeroProps {
 
 export default function Hero({ variant }: HeroProps) {
   const isLight = variant === 'light-a' || variant === 'light-b'
+  const heroRef = useRef<HTMLElement>(null)
+  const isHeroInView = useInView(heroRef, { margin: '0px' })
 
   const t = {
     bg: variant === 'light-a'
@@ -57,6 +60,7 @@ export default function Hero({ variant }: HeroProps) {
 
   return (
     <section
+      ref={heroRef}
       id="hero"
       className="relative min-h-screen flex items-center"
       style={{ background: t.bg, overflow: 'hidden' }}
@@ -324,7 +328,7 @@ export default function Hero({ variant }: HeroProps) {
         </span>
         <m.div
           style={{ width: '1px', height: '44px', background: 'linear-gradient(to bottom, rgba(216,180,160,0.5), transparent)' }}
-          animate={{ scaleY: [0.3, 1, 0.3], opacity: [0.4, 1, 0.4] }}
+          animate={isHeroInView ? { scaleY: [0.3, 1, 0.3], opacity: [0.4, 1, 0.4] } : false}
           transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
         />
       </m.div>

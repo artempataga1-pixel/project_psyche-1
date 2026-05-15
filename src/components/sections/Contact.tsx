@@ -295,13 +295,29 @@ export default function Contact({ variant }: { variant?: Variant }) {
 
   useEffect(() => {
     window.addEventListener('message', handleCalendlyEvent)
-    const t = setInterval(() => {
-      if (window.Calendly) { setCalendlyReady(true); clearInterval(t) }
-    }, 300)
-    return () => {
-      window.removeEventListener('message', handleCalendlyEvent)
-      clearInterval(t)
+
+    if (window.Calendly) {
+      setCalendlyReady(true)
+    } else {
+      const link = document.createElement('link')
+      link.rel = 'stylesheet'
+      link.href = 'https://assets.calendly.com/assets/external/widget.css'
+      document.head.appendChild(link)
+
+      const script = document.createElement('script')
+      script.src = 'https://assets.calendly.com/assets/external/widget.js'
+      script.async = true
+      script.onload = () => setCalendlyReady(true)
+      document.head.appendChild(script)
+
+      return () => {
+        window.removeEventListener('message', handleCalendlyEvent)
+        if (document.head.contains(link)) document.head.removeChild(link)
+        if (document.head.contains(script)) document.head.removeChild(script)
+      }
     }
+
+    return () => window.removeEventListener('message', handleCalendlyEvent)
   }, [handleCalendlyEvent])
 
   function openCalendly() {

@@ -56,7 +56,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${inHero ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}
+      className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-[background,opacity,transform] duration-500 ${inHero ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}
       style={{
         background: scrolled
           ? 'rgba(12, 22, 35, 0.88)'

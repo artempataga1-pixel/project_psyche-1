@@ -58,11 +58,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" className={`${inter.variable} ${openSans.variable} ${cormorant.variable}`}>
-      <head>
-        <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script src="https://assets.calendly.com/assets/external/widget.js" async></script>
-      </head>
       <body className="antialiased">
         <LazyMotion features={domAnimation}>
           <ScrollReset />
