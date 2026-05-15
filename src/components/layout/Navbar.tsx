@@ -21,10 +21,12 @@ export default function Navbar() {
   const navRef = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
+    let prevScrolled = false, prevInHero = true
     const onScroll = () => {
       const y = window.scrollY
-      setScrolled(y > 60)
-      setInHero(y < window.innerHeight * 0.9)
+      const ns = y > 60, ni = y < window.innerHeight * 0.9
+      if (ns !== prevScrolled) { prevScrolled = ns; setScrolled(ns) }
+      if (ni !== prevInHero) { prevInHero = ni; setInHero(ni) }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)

@@ -21,13 +21,6 @@ const OVERLAY_COLORS = [
   'rgba(248,249,250,0.18)',
 ]
 
-const KEYFRAMES = [...Array(10)].map((_, i) => `
-  @keyframes holo${i + 1} {
-    0%,100% { transform: rotate(${i * 10}deg); }
-    50%     { transform: rotate(${(i + 1) * 10}deg); }
-  }
-`).join('')
-
 function getRect(el: HTMLElement | null) {
   const r = el?.getBoundingClientRect()
   return { l: r?.left ?? 0, r: r?.right ?? 0, t: r?.top ?? 0, b: r?.bottom ?? 0 }
@@ -75,19 +68,18 @@ export function HolographicButton({
   const [matrix, setMatrix] = useState(IDENTITY)
   const [overlayPos, setOverlayPos] = useState(0)
   const [noInOut, setNoInOut] = useState(true)
-  const [idle, setIdle] = useState(false)
   const [ready, setReady] = useState(false)
   const [hovered, setHovered] = useState(false)
   const lastM = useRef(IDENTITY)
   const tReady = useRef(false)
   const timers = useRef<ReturnType<typeof setTimeout>[]>([])
+  const rafRef = useRef<number | null>(null)
   const clear = () => timers.current.forEach(clearTimeout)
 
   const go = useCallback((m: string) => { lastM.current = m; setMatrix(m) }, [])
 
   const onEnter = useCallback((e: MouseEvent) => {
     clear()
-    setIdle(false)
     setHovered(true)
     const { l, r, t, b } = getRect(ref.current)
     const xc = (l + r) / 2, yc = (t + b) / 2
@@ -103,12 +95,17 @@ export function HolographicButton({
     if (!ready) setReady(true)
   }, [go, ready])
 
+  // Throttled to one update per animation frame — prevents setTimeout accumulation
   const onMove = useCallback((e: MouseEvent) => {
-    const { l, r, t, b } = getRect(ref.current)
-    const xc = (l + r) / 2, yc = (t + b) / 2
-    timers.current.push(setTimeout(() =>
-      setOverlayPos((Math.abs(xc - e.clientX) + Math.abs(yc - e.clientY)) / 1.5), 150))
-    if (tReady.current) go(buildMatrix(e.clientX, e.clientY, l, r, t, b))
+    const clientX = e.clientX, clientY = e.clientY
+    if (rafRef.current !== null) return
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null
+      const { l, r, t, b } = getRect(ref.current)
+      const xc = (l + r) / 2, yc = (t + b) / 2
+      setOverlayPos((Math.abs(xc - clientX) + Math.abs(yc - clientY)) / 1.5)
+      if (tReady.current) go(buildMatrix(clientX, clientY, l, r, t, b))
+    })
   }, [go])
 
   const onLeave = useCallback((e: MouseEvent) => {
@@ -120,11 +117,14 @@ export function HolographicButton({
       setNoInOut(false)
       timers.current.push(setTimeout(() => setOverlayPos(p => -p / 4), 150))
       timers.current.push(setTimeout(() => setOverlayPos(0), 300))
-      timers.current.push(setTimeout(() => { setIdle(true); setNoInOut(true) }, 500))
+      timers.current.push(setTimeout(() => setNoInOut(true), 500))
     }))
   }, [go])
 
-  useEffect(() => () => clear(), [])
+  useEffect(() => () => {
+    clear()
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current)
+  }, [])
 
   const Tag = href ? 'a' : 'button'
 
@@ -154,8 +154,6 @@ export function HolographicButton({
           : (style?.boxShadow as string) ?? 'none',
       }}
     >
-      <style>{KEYFRAMES}</style>
-
       {/* Контент */}
       <span style={{ position: 'relative', zIndex: 2, display: 'contents' }}>
         {children}
@@ -175,7 +173,6 @@ export function HolographicButton({
             transform: `rotate(${overlayPos + i * 10}deg)`,
             transformOrigin: 'center center',
             transition: !noInOut ? 'transform 200ms ease-out' : 'none',
-            animation: !idle ? 'none' : `holo${i + 1} 5s infinite`,
             willChange: 'transform',
             background: color,
             filter: 'blur(10px)',

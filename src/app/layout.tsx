@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Open_Sans } from 'next/font/google'
+import { Inter, Open_Sans, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import ScrollReset from '@/components/ScrollReset'
 
@@ -12,6 +12,14 @@ const inter = Inter({
 const openSans = Open_Sans({
   subsets: ['latin', 'cyrillic'],
   variable: '--font-open-sans',
+  display: 'swap',
+})
+
+const cormorant = Cormorant_Garamond({
+  subsets: ['latin', 'cyrillic'],
+  variable: '--font-cormorant',
+  weight: ['300', '400', '500', '600', '700'],
+  style: ['normal', 'italic'],
   display: 'swap',
 })
 
@@ -48,15 +56,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="ru" className={`${inter.variable} ${openSans.variable}`}>
+    <html lang="ru" className={`${inter.variable} ${openSans.variable} ${cormorant.variable}`}>
       <head>
-        {/* Cormorant Garamond — элегантный серифный шрифт для заголовков */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-          rel="stylesheet"
-        />
         <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet" />
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script src="https://assets.calendly.com/assets/external/widget.js" async></script>

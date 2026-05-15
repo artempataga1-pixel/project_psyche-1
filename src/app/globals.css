@@ -1,9 +1,6 @@
 @import "tailwindcss";
 
 :root {
-  /* Шрифты */
-  --font-cormorant: 'Cormorant Garamond', Georgia, serif;
-
   /* Базовая палитра */
   --color-bg:        #F8F9FA;
   --color-bg-warm:   #FAF7F4;

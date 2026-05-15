@@ -104,6 +104,7 @@ export default function Hero({ variant }: HeroProps) {
               width={640}
               height={480}
               priority
+              sizes="(max-width: 1024px) 320px, 0px"
               style={{
                 width: '100%',
                 height: 'auto',
@@ -248,6 +249,7 @@ export default function Hero({ variant }: HeroProps) {
               width={800}
               height={600}
               priority
+              sizes="(max-width: 1280px) 45vw, 480px"
               style={{
                 width: '100%',
                 height: 'auto',
