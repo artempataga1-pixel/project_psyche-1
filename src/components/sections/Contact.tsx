@@ -36,7 +36,7 @@ export default function Contact({ variant }: { variant?: Variant }) {
     ? (variant === 'light-a' ? 'rgba(74,111,165,0.12)' : 'rgba(216,180,160,0.18)')
     : 'rgba(255,255,255,0.07)'
 
-  const botUrl = `https://t.me/${contact.botUsername}`
+  const botUrl = `https://t.me/${contact.botUsername}?start=site`
 
   return (
     <section id="contact" className="py-20 md:py-32 relative overflow-hidden" style={{ background: sectionBg }}>
